@@ -1,70 +1,342 @@
-# Getting Started with Create React App
+I had to make an image slider for a project and I found out that there is no ready to use, cool, basic, image slider. So I went ahead and made one using react-slick.
+In this article we will be making that image slider together. Let's get right into it.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Live Link: [https://7etlk.csb.app/](https://7etlk.csb.app/)
 
-## Available Scripts
+Github Repo: [https://github.com/holdmypotion/react-3d-image-slider](https://github.com/holdmypotion/react-3d-image-slider)
 
-In the project directory, you can run:
+# Setup
 
-### `yarn start`
+Run the following commands to setup the project.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+npx create-react-app react-3d-image-slider
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```bash
+cd react-3d-image-slider
+npm install react-slick slick-carousel
+```
 
-### `yarn test`
+Now, in the App.css file erase everything and copy-past the code below
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```css
+/* App.css */
 
-### `yarn build`
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+.App {
+  text-align: center;
+  height: 100vh;
+}
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+.container {
+  padding: 2.5rem 0;
+}
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Creating the Slider
 
-### `yarn eject`
+Let me first throwing the required CSS for the image slider component
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```css
+/* src/components/ImageSlider.css */
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+.slide {
+  transform: scale(0.7);
+  transition: transform 300ms;
+  opacity: 0.5;
+}
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+.slideWrapper {
+  display: flex;
+  justify-content: center;
+}
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+.prevArrow {
+  position: absolute;
+  top: 40%;
+  left: 60px;
+  z-index: 100;
+  cursor: pointer;
+  font-size: 2rem;
+}
 
-## Learn More
+.nextArrow {
+  position: absolute;
+  top: 40%;
+  right: 60px;
+  z-index: 100;
+  cursor: pointer;
+  font-size: 2rem;
+}
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```jsx
+// src/components/ImageSlider.js
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+import React, { useState } from "react";
+// 1.
+import Slider from "react-slick";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
-### Code Splitting
+import "./ImageSlider.css";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+// 2.
+const NextArrow = ({ onClick }) => {
+  return (
+    <div className="nextArrow" onClick={onClick}>
+      <BsChevronRight />
+    </div>
+  );
+};
 
-### Analyzing the Bundle Size
+const PrevArrow = ({ onClick }) => {
+  return (
+    <div className="prevArrow" onClick={onClick}>
+      <BsChevronLeft />
+    </div>
+  );
+};
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+const ImageSlider = ({ images, slidesToShow = 3 }) => {
+  // 3.
+  const [imageIndex, setImageIndex] = useState(0);
 
-### Making a Progressive Web App
+  // 4.
+  const settings = {
+    centerMode: true,
+    infinite: true,
+    dots: false,
+    speed: 300,
+    slidesToShow: slidesToShow,
+    centerPadding: "0",
+    swipeToSlide: true,
+    focusOnSelect: true,
+    nextArrow: <NextArrow onClick />,
+    prevArrow: <PrevArrow onClick />,
+    beforeChange: (current, next) => setImageIndex(next),
+    responsive: [
+      {
+        breakpoint: 1490,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 820,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  // 5.
+  const templateImages = images.map((image, idx) => {
+    return (
+      <div
+        className={idx === imageIndex ? "activeSlide" : "slide"}
+        key={image.id}
+      >
+        <div className="slideWrapper">
+          {image.code ? image.code : <img src={image.src} alt={image.alt} />}
+        </div>
+      </div>
+    );
+  });
 
-### Advanced Configuration
+  return <Slider {...settings}>{templateImages}</Slider>;
+};
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+export default ImageSlider;
+```
 
-### Deployment
+Let's break down this file
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+1. import Slider from "react-slick"
+2. NextArrow and PrevArrow are the custom components that we will be using instead of the default arrows for the image slider
+3. In Slider component, each element is given an index starting from 0. This is the same way Indices work in the map() function in javascript. We are using the state "imageIndex" to keep the track of latest (center image in case of odd number of slider, i.e, 3, 5, ...)
+4. const settings hold the configuration for the slider.
+5. templateImages variable holds the JSX for all the image components
 
-### `yarn build` fails to minify
+# Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This code for the slider takes in the data in a format as show below
+
+```jsx
+// src/data/data.js
+
+export const IMAGES = [
+  {
+    id: 1,
+    src: "/images/image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 2,
+    src: "/images/image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 3,
+    src: "/images/image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 4,
+    src: "/images/image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 5,
+    src: "/images/image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 6,
+    src: "/images/image.png",
+    alt: "Placeholder image",
+  },
+];
+
+export const LARGE_IMAGES = [
+  {
+    id: 1,
+    src: "/images/large_image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 2,
+    src: "/images/large_image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 3,
+    src: "/images/large_image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 4,
+    src: "/images/large_image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 5,
+    src: "/images/large_image.png",
+    alt: "Placeholder image",
+  },
+  {
+    id: 6,
+    src: "/images/large_image.png",
+    alt: "Placeholder image",
+  },
+];
+
+export const VIDEOS = [
+  {
+    id: 1,
+    code: (
+      <iframe
+        title="vid1"
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/A63UxsQsEbU"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      ></iframe>
+    ),
+  },
+  {
+    id: 2,
+    code: (
+      <iframe
+        title="vid2"
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/Z5iWr6Srsj8"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      ></iframe>
+    ),
+  },
+  {
+    id: 3,
+    code: (
+      <iframe
+        title="vid3"
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/WRkmpqTluI8"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      ></iframe>
+    ),
+  },
+  {
+    id: 4,
+    code: (
+      <iframe
+        title="vid4"
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/vyVpRiqOvt4"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      ></iframe>
+    ),
+  },
+];
+```
+
+But, you can modify it any way. If you just have a list of image urls, good enough. Just change the JSX code inside the "templateSlider" variable, accordingly!
+
+BTW, if you are wondering that why I am referencing the images in the src attribute as
+
+```jsx
+export const LARGE_IMAGES = [
+  {
+    id: 1,
+    src: "/images/large_image.png",
+    alt: "Placeholder image",
+  },
+];
+```
+
+It is because the images are in the pubic folder inside a public directory.
+
+```bash
+public/images/......
+```
+
+### Using the Image Slider
+
+```jsx
+// App.js
+
+import "./App.css";
+import ImageSlider from "./components/ImageSlider";
+
+import { IMAGES, VIDEOS, LARGE_IMAGES } from "./data/data";
+
+function App() {
+  return (
+    <div className="App">
+      <div className="container">
+        <ImageSlider images={IMAGES} slidesToShow={5} />
+      </div>
+      <div className="container">
+        <ImageSlider images={VIDEOS} />
+      </div>
+      <div className="container">
+        <ImageSlider images={LARGE_IMAGES} />
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### Thank you so much for reading.
+
+I would love to hear your thoughts on this!
