@@ -6,7 +6,7 @@ import "./ImageSlider.css";
 
 const NextArrow = ({ onClick }) => {
   return (
-    <div className='nextArrow' onClick={onClick}>
+    <div className="nextArrow" onClick={onClick}>
       <BsChevronRight />
     </div>
   );
@@ -14,7 +14,7 @@ const NextArrow = ({ onClick }) => {
 
 const PrevArrow = ({ onClick }) => {
   return (
-    <div className='prevArrow' onClick={onClick}>
+    <div className="prevArrow" onClick={onClick}>
       <BsChevronLeft />
     </div>
   );
@@ -24,7 +24,6 @@ const ImageSlider = ({ images, slidesToShow = 3 }) => {
   const [imageIndex, setImageIndex] = useState(0);
 
   const settings = {
-    className: "center",
     centerMode: true,
     infinite: true,
     dots: false,
@@ -61,7 +60,7 @@ const ImageSlider = ({ images, slidesToShow = 3 }) => {
           className={idx === imageIndex ? "activeSlide" : "slide"}
           key={image.id}
         >
-          <div className='slideWrapper'>
+          <div className="slideWrapper">
             {image.code ? image.code : <img src={image.src} alt={image.alt} />}
           </div>
         </div>
