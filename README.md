@@ -1,4 +1,4 @@
-I had to make an image slider for a project and I found out that there is no ready to use, cool, basic, image slider. So I went ahead and made one using react-slick.
+I had to make an image slider for a project and I found out that there is no ready to use, cool, basic, image slider. So I went ahead and made one using swiper.
 In this article we will be making that image slider together. Let's get right into it.
 
 Live Link: [https://react-3d-image-slider.netlify.app/](https://react-3d-image-slider.netlify.app/)
