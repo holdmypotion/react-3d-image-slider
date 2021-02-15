@@ -1,27 +1,8 @@
 import React, { useState } from "react";
-import Slider from "react-slick";
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-// import Swiper core and required modules
 
 import "./ImageSlider.css";
-
-const NextArrow = ({ onClick }) => {
-  return (
-    <div className="nextArrow" onClick={onClick}>
-      <BsChevronRight />
-    </div>
-  );
-};
-
-const PrevArrow = ({ onClick }) => {
-  return (
-    <div className="prevArrow" onClick={onClick}>
-      <BsChevronLeft />
-    </div>
-  );
-};
 
 const ImageSlider = ({ images, slidesToShow = 3 }) => {
   const settings = {
@@ -35,7 +16,7 @@ const ImageSlider = ({ images, slidesToShow = 3 }) => {
     },
   };
 
-  const templateImages = images.map((image, idx) => {
+  const templateImages = images.map((image) => {
     if (image !== null) {
       return (
         <SwiperSlide key={image.id}>
