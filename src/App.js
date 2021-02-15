@@ -1,7 +1,13 @@
 import "./App.css";
-import ImageSlider from "./components/ImageSlider";
-
 import { IMAGES, VIDEOS, LARGE_IMAGES } from "./data/data";
+
+import ImageSlider from "./components/ImageSlider";
+import SwiperCore, { Navigation, A11y } from 'swiper';
+// Import Swiper styles
+import 'swiper/swiper.min.css';
+import 'swiper/components/navigation/navigation.min.css';
+// install Swiper modules
+SwiperCore.use([Navigation, A11y]);
 
 function App() {
   return (
