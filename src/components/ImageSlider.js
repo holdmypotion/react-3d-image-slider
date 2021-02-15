@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
+import "./ImageSlider.css";
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-import "./ImageSlider.css";
+import SwiperCore, { Navigation, A11y } from 'swiper';
+// Import Swiper styles
+import 'swiper/swiper.min.css';
+import 'swiper/components/navigation/navigation.min.css';
+// install Swiper modules
+SwiperCore.use([Navigation, A11y]);
 
 const ImageSlider = ({ images, slidesToShow = 3 }) => {
   const settings = {
