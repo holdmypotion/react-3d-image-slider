@@ -1,9 +1,7 @@
-I had to make an image slider for a project and I found out that there is no ready to use, cool, basic, image slider. So I went ahead and made one using react-slick.
+I had to make an image slider for a project and I found out that there is no ready to use, cool, basic, image slider. So I went ahead and made one using swiper.
 In this article we will be making that image slider together. Let's get right into it.
 
-Live Link: [https://7etlk.csb.app/](https://7etlk.csb.app/)
-
-Github Repo: [https://github.com/holdmypotion/react-3d-image-slider](https://github.com/holdmypotion/react-3d-image-slider)
+Live Link: [https://react-3d-image-slider.netlify.app/](https://react-3d-image-slider.netlify.app/)
 
 # Setup
 
@@ -15,16 +13,13 @@ npx create-react-app react-3d-image-slider
 
 ```bash
 cd react-3d-image-slider
-npm install react-slick slick-carousel
+npm install swiper
 ```
 
 Now, in the App.css file erase everything and copy-past the code below
 
 ```css
 /* App.css */
-
-@import "slick-carousel/slick/slick.css";
-@import "slick-carousel/slick/slick-theme.css";
 
 .App {
   text-align: center;
@@ -43,113 +38,65 @@ Let me first throwing the required CSS for the image slider component
 ```css
 /* src/components/ImageSlider.css */
 
-.slide {
+.swiper-slide {
   transform: scale(0.7);
   transition: transform 300ms;
   opacity: 0.5;
 }
-
+.swiper-slide-active{
+  transform: scale(1);
+  opacity: 1;
+}
 .slideWrapper {
   display: flex;
   justify-content: center;
-}
-
-.prevArrow {
-  position: absolute;
-  top: 40%;
-  left: 60px;
-  z-index: 100;
-  cursor: pointer;
-  font-size: 2rem;
-}
-
-.nextArrow {
-  position: absolute;
-  top: 40%;
-  right: 60px;
-  z-index: 100;
-  cursor: pointer;
-  font-size: 2rem;
 }
 ```
 
 ```jsx
 // src/components/ImageSlider.js
-
-import React, { useState } from "react";
-// 1.
-import Slider from "react-slick";
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-
+import React from "react";
 import "./ImageSlider.css";
 
+// 1.
+import { Swiper, SwiperSlide } from 'swiper/react';
 // 2.
-const NextArrow = ({ onClick }) => {
-  return (
-    <div className="nextArrow" onClick={onClick}>
-      <BsChevronRight />
-    </div>
-  );
-};
-
-const PrevArrow = ({ onClick }) => {
-  return (
-    <div className="prevArrow" onClick={onClick}>
-      <BsChevronLeft />
-    </div>
-  );
-};
+import SwiperCore, { Navigation, A11y } from 'swiper';
+// 3. 
+import 'swiper/swiper.min.css';
+import 'swiper/components/navigation/navigation.min.css';
+// 4.
+SwiperCore.use([Navigation, A11y]);
 
 const ImageSlider = ({ images, slidesToShow = 3 }) => {
-  // 3.
-  const [imageIndex, setImageIndex] = useState(0);
-
-  // 4.
+  // 5.
   const settings = {
-    centerMode: true,
-    infinite: true,
-    dots: false,
-    speed: 300,
-    slidesToShow: slidesToShow,
-    centerPadding: "0",
-    swipeToSlide: true,
-    focusOnSelect: true,
-    nextArrow: <NextArrow onClick />,
-    prevArrow: <PrevArrow onClick />,
-    beforeChange: (current, next) => setImageIndex(next),
-    responsive: [
-      {
-        breakpoint: 1490,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
+    centeredSlides: true,
+    loop: true,
+    slidesToShow: 1,
+    breakpoints: {
+      820: {
+        slidesPerView: slidesToShow,
       },
-      {
-        breakpoint: 820,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+    },
   };
 
-  // 5.
-  const templateImages = images.map((image, idx) => {
-    return (
-      <div
-        className={idx === imageIndex ? "activeSlide" : "slide"}
-        key={image.id}
-      >
-        <div className="slideWrapper">
-          {image.code ? image.code : <img src={image.src} alt={image.alt} />}
-        </div>
-      </div>
-    );
+  // 6.
+  const templateImages = images.map((image) => {
+    if (image !== null) {
+      return (
+      // 7.
+        <SwiperSlide key={image.id}>
+          <div className="slideWrapper">
+            {image.code ? image.code : <img src={image.src} alt={image.alt} />}
+          </div>
+        </SwiperSlide>
+      );
+    }
+    return null;
   });
 
-  return <Slider {...settings}>{templateImages}</Slider>;
+  return <Swiper {...settings} navigation style={{ '--swiper-navigation-color': 'black' }}>{templateImages}</Swiper>;
 };
 
 export default ImageSlider;
@@ -157,11 +104,13 @@ export default ImageSlider;
 
 Let's break down this file
 
-1. import Slider from "react-slick"
-2. NextArrow and PrevArrow are the custom components that we will be using instead of the default arrows for the image slider
-3. In Slider component, each element is given an index starting from 0. This is the same way Indices work in the map() function in javascript. We are using the state "imageIndex" to keep the track of latest (center image in case of odd number of slider, i.e, 3, 5, ...)
-4. const settings hold the configuration for the slider.
-5. templateImages variable holds the JSX for all the image components
+1. import Slider from "swiper/react"
+2. import SwiperCore & needed modules rom swiper
+3. import swiper core styles & needed module styles
+4. install swiper modules
+5. const settings hold the configuration for the slider.
+6. templateImages variable holds the JSX for all the image components
+7. in Slider component, each element is given an index starting from 0. This is the same way Indices work in the map() function in javascript. We are using the state "imageIndex" to keep the track of latest (center image in case of odd number of slider, i.e, 3, 5, ...)
 
 # Usage
 
@@ -314,20 +263,20 @@ public/images/......
 // App.js
 
 import "./App.css";
-import ImageSlider from "./components/ImageSlider";
-
 import { IMAGES, VIDEOS, LARGE_IMAGES } from "./data/data";
+
+import ImageSlider from "./components/ImageSlider";
 
 function App() {
   return (
-    <div className="App">
-      <div className="container">
+    <div className='App'>
+      <div className='container'>
         <ImageSlider images={IMAGES} slidesToShow={5} />
       </div>
-      <div className="container">
+      <div className='container'>
         <ImageSlider images={VIDEOS} />
       </div>
-      <div className="container">
+      <div className='container'>
         <ImageSlider images={LARGE_IMAGES} />
       </div>
     </div>
@@ -335,6 +284,7 @@ function App() {
 }
 
 export default App;
+
 ```
 
 ### Thank you so much for reading.

@@ -1,75 +1,40 @@
-import React, { useState } from "react";
-import Slider from "react-slick";
-import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-
+import React from "react";
 import "./ImageSlider.css";
 
-const NextArrow = ({ onClick }) => {
-  return (
-    <div className="nextArrow" onClick={onClick}>
-      <BsChevronRight />
-    </div>
-  );
-};
-
-const PrevArrow = ({ onClick }) => {
-  return (
-    <div className="prevArrow" onClick={onClick}>
-      <BsChevronLeft />
-    </div>
-  );
-};
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Navigation, A11y } from 'swiper';
+// Import Swiper styles
+import 'swiper/swiper.min.css';
+import 'swiper/components/navigation/navigation.min.css';
+// install Swiper modules
+SwiperCore.use([Navigation, A11y]);
 
 const ImageSlider = ({ images, slidesToShow = 3 }) => {
-  const [imageIndex, setImageIndex] = useState(0);
-
   const settings = {
-    centerMode: true,
-    infinite: true,
-    dots: false,
-    speed: 300,
-    slidesToShow: slidesToShow,
-    centerPadding: "0",
-    swipeToSlide: true,
-    focusOnSelect: true,
-    nextArrow: <NextArrow onClick />,
-    prevArrow: <PrevArrow onClick />,
-    beforeChange: (current, next) => setImageIndex(next),
-    responsive: [
-      {
-        breakpoint: 1490,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-        },
+    centeredSlides: true,
+    loop: true,
+    slidesToShow: 1,
+    breakpoints: {
+      820: {
+        slidesPerView: slidesToShow,
       },
-      {
-        breakpoint: 820,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+    },
   };
 
-  const templateImages = images.map((image, idx) => {
+  const templateImages = images.map((image) => {
     if (image !== null) {
       return (
-        <div
-          className={idx === imageIndex ? "activeSlide" : "slide"}
-          key={image.id}
-        >
+        <SwiperSlide key={image.id}>
           <div className="slideWrapper">
             {image.code ? image.code : <img src={image.src} alt={image.alt} />}
           </div>
-        </div>
+        </SwiperSlide>
       );
     }
     return null;
   });
 
-  return <Slider {...settings}>{templateImages}</Slider>;
+  return <Swiper {...settings} navigation style={{ '--swiper-navigation-color': 'black' }}>{templateImages}</Swiper>;
 };
 
 export default ImageSlider;

@@ -1,7 +1,7 @@
 import "./App.css";
-import ImageSlider from "./components/ImageSlider";
-
 import { IMAGES, VIDEOS, LARGE_IMAGES } from "./data/data";
+
+import ImageSlider from "./components/ImageSlider";
 
 function App() {
   return (
